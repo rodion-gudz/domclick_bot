@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "domclick_bot"
+version = "0.0.1"
+description = ""
+authors = ["RodionGudz <rodion.gudz@icloud.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = {version = "3.0.0b7", extras = ["redis"]}
+pydantic = {extras = ["dotenv"], version = "^1.10.7"}
+fluentogram = {git = "https://github.com/rodion-gudz/fluentogram"}
+sqlalchemy = "^2.0.9"
+asyncpg = "^0.27.0"
+alembic = "^1.10.3"
+fastapi = "^0.95.1"
+uvicorn = {extras = ["standard"], version = "^0.21.1"}
+python-multipart = "^0.0.6"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^5.0.4"
+mypy = "^0.971"
+black = "^22.8.0"
+isort = "^5.10.1"
+jinja2 = "^3.1.2"
+
+[tool.black]
+line-length = 79
+target-version = ['py310']
+
+[tool.isort]
+line_length = 79
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

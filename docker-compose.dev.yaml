@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    pull_policy: never
+    command:
+      - /bin/bash
+      - -c
+      - |
+        alembic upgrade head
+        python -m app
+    environment:
+      REDIS__HOST: redis
+      POSTGRES__HOST: postgres
+      POSTGRES__USER: postgres
+      POSTGRES__PASSWORD: EDIT_ME
+      POSTGRES__DB: postgres
+
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: EDIT_ME
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_DB" ]
+      interval: 1s
+      timeout: 1s
+      retries: 10
+
+  redis:
+    image: redis:7
+    volumes:
+      - redis-data:/bitnami/redis/data
+    expose:
+      - 6379
+
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 1s
+      retries: 10
+
+volumes:
+  postgres-data:
+  redis-data:
